@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title></title>
+</head>
+<body>
+    <h1>RHU Meds and Supply Inventory</h1>
+            <button class="btn-info my-5"><a href="nurse_interface.php" class="text-light">Nurse Profile</a></button>
+            <button class="btn-info my-5"><a href="npatient.php" class="text-light">Patient</a></button>
+            <button class="btn-info my-5"><a href="nmedicine.php" class="text-light">Medicine</a></button>
+            <button class="btn-info my-5"><a href="nsupplies.php" class="text-light">Supplies</a></button>
+            <button class="btn-info my-5"><a href="ncategory.php" class="text-light">Category</a></button>
+            <button class="btn-info my-5"><a href="nexpiration.php" class="text-light">View Expirations</a></button>
+            <button class="btn-info my-5"><a href="nprintable_report.php" class="text-light">Report</a></button>
+            <button class="btn-info my-5"><a href="nactivitylog.php" class="text-light">Logs</a></button>
+            
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type of activity</th>
+            <th>Date and Time</th>
+        </tr>
+<?php
+include "dbconfig.php";
+include "footer.php";
+// Query to retrieve activity logs from the 'activitylogstb' table
+$sql = "SELECT * FROM activitylogstb ORDER BY dateandtime DESC";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . $row["id"] . "</td>";
+        echo "<td>" . $row["accountname"] . "</td>";
+        echo "<td>" . $row["kindofactivity"] . "</td>";
+        echo "<td>" . $row["dateandtime"] . "</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "No activity logs found.";
+}
+
+$conn->close();
+?>
+    </table>
+</body>
+</html>
