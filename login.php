@@ -121,6 +121,7 @@ $conn->close();
 <body>
     <h1>Admin Login</h1>
     <?php if (isset($error)) {
+        //login
         echo "<p class='error'>$error</p>";
     } ?>
     <form method="post">
