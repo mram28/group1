@@ -1,6 +1,7 @@
 <?php
 include "dbconfig.php";
-include "footer.php";
+
+
 // Query to retrieve categories for the dropdown list
 $categoryQuery = "SELECT id, categoryname FROM categorytb";
 $categoryResult = $conn->query($categoryQuery);
@@ -69,10 +70,62 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add New Supplies</title>
+<title>Add New Supplies</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <?php include("admin_dashboard.php"); ?>
+    <style>
+        /* Inline CSS for demonstration purposes */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        select,
+        input[type="date"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+       
+        .btn-info:hover {
+            background-color: #0056b3;
+        }
+    </style>
+       
 </head>
 <body>
-    <h2>Add New Supplies</h2>
+<h2>Add New Supplies</h2>
     <form method="post">
         <label for="category">Category:</label>
         <select name="category">
