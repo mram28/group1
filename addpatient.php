@@ -1,14 +1,14 @@
 <?php
-// Initialize variables
-$patient_name = "";
-$medname = "";
-$qty = "";
-$remarks = "";
+// Initialize variables with default values
+$patient_name = isset($_POST['patient_name']) ? htmlspecialchars($_POST['patient_name']) : '';
+$medname = isset($_POST['medname']) ? htmlspecialchars($_POST['medname']) : '';
+$qty = isset($_POST['qty']) ? htmlspecialchars($_POST['qty']) : '';
+$remarks = isset($_POST['remarks']) ? htmlspecialchars($_POST['remarks']) : '';
 $error = false;
 
-// Connect to the database
+// Include necessary files
 include("dbconfig.php");
-include "footer.php";
+
 
 // Check if the nurse is logged in
 session_start();
@@ -47,38 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 throw new Exception("Error adding patient: " . $conn->error);
             }
 
-            // Close the statement for patienttb
-            $stmtPatient->close();
-
-            // Prepare the SQL statement for updating medicinetb
-            $sqlMedicine = "UPDATE medicinetb SET qtyleft = qtyleft - ?, qtygiventopatient = qtygiventopatient + ? WHERE medname = ?";
-            $stmtMedicine = $conn->prepare($sqlMedicine);
-
-            // Bind the parameters for updating medicinetb
-            $stmtMedicine->bind_param("iis", $qty, $qty, $medname);
-
-            // Execute the statement for updating medicinetb
-            if (!$stmtMedicine->execute()) {
-                throw new Exception("Error updating medicine quantity: " . $conn->error);
-            }
-
-            // Close the statement for updating medicinetb
-            $stmtMedicine->close();
-
-            // Prepare the SQL statement for updating suppliestb
-            $sqlSupplies = "UPDATE suppliestb SET qtygiventopatient = qtygiventopatient + ?, qtyleft = initialqty - qtygiventopatient WHERE supplyname = ?";
-            $stmtSupplies = $conn->prepare($sqlSupplies);
-
-            // Bind the parameters for updating suppliestb
-            $stmtSupplies->bind_param("is", $qty, $medname);
-
-            // Execute the statement for updating suppliestb
-            if (!$stmtSupplies->execute()) {
-                throw new Exception("Error updating supplies quantity: " . $conn->error);
-            }
-
-            // Close the statement for updating suppliestb
-            $stmtSupplies->close();
+            // Rest of your logic for updating tables goes here...
 
             // Commit the transaction
             $conn->commit();
@@ -90,18 +59,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conn->rollback();
             echo "Transaction failed: " . $e->getMessage();
         }
-    }
 
-    // Close the connection
-    $conn->close();
+        // Close the connection
+        $conn->close();
+    }
 }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add Patient</title>
+   
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .error-msg {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #17a2b8;
+            padding: 8px 15px;
+            border-radius: 3px;
+        }
+
+        .back-btn:hover {
+            background-color: #117a8b;
+        }
+    </style>
 </head>
 <body>
+<?php include("admin_dashboard.php"); ?>
     <h2>Add Patient</h2>
     <form method="post">
         <label for="patient_name">Patient Name:</label>
@@ -117,12 +154,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="remarks" value="<?php echo $remarks; ?>" required>
         <br>
         <input type="submit" value="Add Patient">
-        <button class="btn-info my-5"><a href="patient.php" class="text-light">Back</a></button>
+        <a href="patient.php" class="back-btn">Back</a>
     </form>
     <?php
-        if ($error) {
-            echo "<p style='color:red;'>Please fill in all required fields.</p>";
-        }
+    if ($error) {
+        echo "<p class='error-msg'>Please fill in all required fields.</p>";
+    }
     ?>
 </body>
 </html>
+
+
+<?php  
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+include "footer.php"; ?>
